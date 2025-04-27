@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inspire - Aplikasi Mobile Kreatif</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f4f4f4;
+      color: #333;
+    }
+    /* Container menyerupai layar handphone */
+    .app-container {
+      max-width: 480px;
+      margin: 20px auto;
+      background: #fff;
+      min-height: 100vh;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      position: relative;
+    }
+    /* Header */
+    header {
+      background: linear-gradient(135deg, #ff8a00, #e52e71);
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+    header h1 {
+      font-size: 1.5rem;
+      margin-bottom: 5px;
+    }
+    header p {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+    /* Konten Dinamis */
+    #viewContent {
+      padding: 15px;
+      padding-bottom: 80px; /* agar tidak tertutup navbar */
+      transition: opacity 0.3s ease;
+    }
+    /* HOME VIEW */
+    .home-view .featured {
+      background: url('https://via.placeholder.com/480x200.png?text=Featured') center/cover no-repeat;
+      height: 200px;
+      border-radius: 15px;
+      margin-bottom: 15px;
+      position: relative;
+    }
+    .home-view .featured::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: rgba(0,0,0,0.3);
+    }
+    .home-view .featured h2 {
+      position: absolute;
+      bottom: 15px;
+      left: 15px;
+      color: #fff;
+      font-size: 1.2rem;
+      z-index: 1;
+    }
+    .home-view .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .home-view .card {
+      background: #fff;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+    .home-view .card:hover {
+      transform: translateY(-5px);
+    }
+    .home-view .card img { width: 100%; display: block; }
+    .home-view .card .card-content {
+      padding: 10px;
+    }
+    .home-view .card .card-content h3 {
+      font-size: 1rem;
+      margin-bottom: 5px;
+      color: #e52e71;
+    }
+    .home-view .card .card-content p {
+      font-size: 0.8rem;
+      color: #555;
+    }
+    /* VIEW: JELAJAH */
+    .explore-view {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+    .explore-view h2 {
+      text-align: center;
+      margin-bottom: 15px;
+      color: #e52e71;
+    }
+    .explore-view .item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .explore-view .item img {
+      width: 120px;
+      object-fit: cover;
+    }
+    .explore-view .item .info {
+      flex: 1;
+    }
+    .explore-view .item .info h3 {
+      font-size: 1rem;
+      margin-bottom: 5px;
+      color: #e52e71;
+    }
+    .explore-view .item .info p {
+      font-size: 0.8rem;
+      color: #555;
+    }
+    /* VIEW: FAVORIT */
+    .favorites-view h2 {
+      text-align: center;
+      margin-bottom: 15px;
+      color: #e52e71;
+    }
+    .favorites-view ul {
+      list-style: none;
+      padding: 0;
+    }
+    .favorites-view ul li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin-bottom: 10px;
+    }
+    .favorites-view ul li img {
+      width: 60px;
+      height: 60px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+    .favorites-view ul li .text {
+      font-size: 0.9rem;
+      color: #333;
+    }
+    /* VIEW: PROFIL */
+    .profile-view {
+      text-align: center;
+    }
+    .profile-view img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 15px auto;
+    }
+    .profile-view h2 {
+      font-size: 1.2rem;
+      color: #e52e71;
+      margin-top: 10px;
+    }
+    .profile-view p {
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 5px;
+    }
+    .profile-view .btn {
+      display: inline-block;
+      background: #e52e71;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 20px;
+      text-decoration: none;
+      margin-top: 15px;
+      transition: background 0.3s;
+    }
+    .profile-view .btn:hover {
+      background: #c74162;
+    }
+    /* Navbar Bawah */
+    .navbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(135deg, #e52e71, #ff8a00);
+      height: 60px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+    .navbar a {
+      text-decoration: none;
+      color: #fff;
+      text-align: center;
+      font-size: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.2s;
+    }
+    .navbar a.active { transform: scale(1.1); }
+    .navbar a .icon {
+      font-size: 1.4rem;
+      margin-bottom: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header>
+      <h1>Inspire</h1>
+      <p>Dosis harian kreativitasmu</p>
+    </header>
+    
+    <!-- Konten Dinamis -->
+    <div id="viewContent">
+      <!-- Tampilan Beranda (default) -->
+      <div class="home-view">
+        <div class="featured">
+          <h2>Temukan Ide Baru</h2>
+        </div>
+        <div class="grid">
+          <div class="card">
+            <img src="https://via.placeholder.com/220x150?text=Karya+1" alt="Karya 1">
+            <div class="card-content">
+              <h3>Warna Abstrak</h3>
+              <p>Jelajahi pola warna yang penuh imajinasi.</p>
+            </div>
+          </div>
+          <div class="card">
+            <img src="https://via.placeholder.com/220x150?text=Karya+2" alt="Karya 2">
+            <div class="card-content">
+              <h3>Suara Alam</h3>
+              <p>Rasakan pesona keindahan alam.</p>
+            </div>
+          </div>
+          <div class="card">
+            <img src="https://via.placeholder.com/220x150?text=Karya+3" alt="Karya 3">
+            <div class="card-content">
+              <h3>Denim Kota</h3>
+              <p>Nikmati dinamika kehidupan kota modern.</p>
+            </div>
+          </div>
+          <div class="card">
+            <img src="https://via.placeholder.com/220x150?text=Karya+4" alt="Karya 4">
+            <div class="card-content">
+              <h3>Harmoni</h3>
+              <p>Temukan keseimbangan dalam desain yang menakjubkan.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Navbar Bawah -->
+    <nav class="navbar">
+      <a href="#" class="nav-link active" data-view="home">
+        <div class="icon">&#8962;</div>
+        <span>Beranda</span>
+      </a>
+      <a href="#" class="nav-link" data-view="explore">
+        <div class="icon">&#128269;</div>
+        <span>Jelajah</span>
+      </a>
+      <a href="#" class="nav-link" data-view="favorites">
+        <div class="icon">&#10084;</div>
+        <span>Favorit</span>
+      </a>
+      <a href="#" class="nav-link" data-view="profile">
+        <div class="icon">&#128100;</div>
+        <span>Profil</span>
+      </a>
+    </nav>
+  </div>
+  
+  <script>
+    // Definisikan konten untuk tiap view (Bahasa Indonesia)
+    const views = {
+      home: document.querySelector('.home-view').outerHTML,
+      explore: `
+        <div class="explore-view">
+          <h2 style="text-align:center; margin-bottom:15px; color:#e52e71;">Jelajah</h2>
+          <div class="item" style="display: flex; align-items: center; gap: 10px; padding: 10px; background: #fff; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom:10px;">
+            <img src="https://via.placeholder.com/120x120?text=Foto+1" alt="Foto 1">
+            <div class="info">
+              <h3>Puncak Gunung</h3>
+              <p>Nikmati pemandangan alam yang menakjubkan.</p>
+            </div>
+          </div>
+          <div class="item" style="display: flex; align-items: center; gap: 10px; padding: 10px; background: #fff; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom:10px;">
+            <img src="https://via.placeholder.com/120x120?text=Foto+2" alt="Foto 2">
+            <div class="info">
+              <h3>Cahaya Kota</h3>
+              <p>Merasakan gemerlap malam penuh energi.</p>
+            </div>
+          </div>
+          <div class="item" style="display: flex; align-items: center; gap: 10px; padding: 10px; background: #fff; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+            <img src="https://via.placeholder.com/120x120?text=Foto+3" alt="Foto 3">
+            <div class="info">
+              <h3>Pantai Indah</h3>
+              <p>Bersantai sambil menikmati deburan ombak.</p>
+            </div>
+          </div>
+        </div>
+      `,
+      favorites: `
+        <div class="favorites-view">
+          <h2 style="text-align:center; margin-bottom:15px; color:#e52e71;">Favorit Anda</h2>
+          <ul>
+            <li style="display:flex; align-items: center; gap:10px; padding: 10px; background:#fff; border-radius:10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom:10px;">
+              <img src="https://via.placeholder.com/60?text=Fav1" alt="Fav1">
+              <div class="text">Warna Abstrak</div>
+            </li>
+            <li style="display:flex; align-items: center; gap:10px; padding: 10px; background:#fff; border-radius:10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom:10px;">
+              <img src="https://via.placeholder.com/60?text=Fav2" alt="Fav2">
+              <div class="text">Denim Kota</div>
+            </li>
+            <li style="display:flex; align-items: center; gap:10px; padding: 10px; background:#fff; border-radius:10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+              <img src="https://via.placeholder.com/60?text=Fav3" alt="Fav3">
+              <div class="text">Suara Alam</div>
+            </li>
+          </ul>
+        </div>
+      `,
+      profile: `
+        <div class="profile-view">
+          <img src="https://via.placeholder.com/150?text=Avatar" alt="Avatar">
+          <h2>Rina S.</h2>
+          <p>Penggagas Kreatif</p>
+          <a href="#" class="btn">Ubah Profil</a>
+        </div>
+      `
+    };
+    
+    const viewContent = document.getElementById('viewContent');
+    const navLinks = document.querySelectorAll('.nav-link');
+    
+    // Fungsi untuk mengganti konten view
+    function setActiveView(view) {
+      viewContent.innerHTML = views[view];
+    }
+    // Set view awal (Beranda)
+    setActiveView('home');
+    
+    // Event listener untuk setiap tombol di navbar
+    navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        navLinks.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+        const view = link.getAttribute('data-view');
+        setActiveView(view);
+      });
+    });
+  </script>
+</body>
+</html>
